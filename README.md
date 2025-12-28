@@ -1,2 +1,14 @@
-# CodeSmellHunter
-CodeSmellHunter 🕵️‍♂️ is a static Python code analysis tool 🔍 that uses AST-based inspection 🌳 to detect common code smells, helping developers reduce maintainability risks ⚠️ and prevent technical debt 💸.
+# 🕵️ CodeSmellHunter
+
+CodeSmellHunter is a static Python code analysis tool that detects common code smells using AST inspection.
+
+## 🚀 Features
+- Long methods
+- Deep nesting
+- Magic numbers
+- Large classes
+- Too many parameters
+
+## 📦 Installation
+```bash
+pip install -r requirements.txt
