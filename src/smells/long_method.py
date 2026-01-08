@@ -1,21 +1,24 @@
-
 import ast
+from .base import CodeSmell
 
+class LongMethod(CodeSmell):
+    name = "Long Method"
+    severity = "HIGH"
 
-class LongMethodDetector:
-    def __init__(self, config):
-        self.max_length = config["MAX_METHOD_LENGTH"]
+    def __init__(self, max_lines=40):
+        self.max_lines = max_lines
 
-    def detect(self, tree, file_path):
-        issues = []
+    def detect(self, tree, filename):
+        results = []
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
-                length = len(node.body)
-                if length > self.max_length:
-                    issues.append({
-                        "type": "Long Method",
-                        "file": file_path,
-                        "function": node.name,
-                        "lines": length,
+                length = node.end_lineno - node.lineno
+                if length > self.max_lines:
+                    results.append({
+                        "file": filename,
+                        "smell": self.name,
+                        "line": node.lineno,
+                        "message": f"Function '{node.name}' has {length} lines",
+                        "severity": self.severity
                     })
-        return issues
+        return results
