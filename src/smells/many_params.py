@@ -1,21 +1,24 @@
 import ast
+from .base import CodeSmell
 
+class ManyParameters(CodeSmell):
+    name = "Too Many Parameters"
+    severity = "MEDIUM"
 
-class ManyParamsDetector:
-    def __init__(self, config):
-        self.max_params = config["MAX_PARAMETERS"]
+    def __init__(self, max_params=4):
+        self.max_params = max_params
 
-    def detect(self, tree, file_path):
-        issues = []
+    def detect(self, tree, filename):
+        results = []
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
-                param_count = len(node.args.args)
-                if param_count > self.max_params:
-                    issues.append({
-                        "type": "Too Many Parameters",
-                        "file": file_path,
-                        "function": node.name,
-                        "count": param_count,
+                count = len(node.args.args)
+                if count > self.max_params:
+                    results.append({
+                        "file": filename,
+                        "smell": self.name,
+                        "line": node.lineno,
+                        "message": f"{count} parameters",
+                        "severity": self.severity
                     })
-        return issues
-
+        return results
