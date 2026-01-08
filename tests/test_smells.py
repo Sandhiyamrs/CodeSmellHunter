@@ -1,8 +1,12 @@
 import ast
-from codesmellhunter.smells.long_method import LongMethod
+from codesmellhunter.smells.many_params import ManyParameters
 
-def test_long_method():
-    code = "def a():\n" + "\n".join([" pass"] * 50)
+
+def test_many_parameters():
+    code = "def f(a,b,c,d,e): pass"
     tree = ast.parse(code)
-    smell = LongMethod(40)
-    assert len(smell.detect(tree, "test.py")) == 1
+
+    smell = ManyParameters(4)
+    issues = smell.detect(tree, "test.py")
+
+    assert len(issues) == 1
