@@ -1,21 +1,24 @@
 import ast
+from .base import CodeSmell
 
+class LargeClass(CodeSmell):
+    name = "Large Class"
+    severity = "HIGH"
 
-class LargeClassDetector:
-    def __init__(self, config):
-        self.max_methods = config["MAX_CLASS_METHODS"]
+    def __init__(self, max_methods=10):
+        self.max_methods = max_methods
 
-    def detect(self, tree, file_path):
-        issues = []
+    def detect(self, tree, filename):
+        results = []
         for node in ast.walk(tree):
             if isinstance(node, ast.ClassDef):
                 methods = [n for n in node.body if isinstance(n, ast.FunctionDef)]
                 if len(methods) > self.max_methods:
-                    issues.append({
-                        "type": "Large Class",
-                        "file": file_path,
-                        "class": node.name,
-                        "method_count": len(methods),
+                    results.append({
+                        "file": filename,
+                        "smell": self.name,
+                        "line": node.lineno,
+                        "message": f"Class '{node.name}' has {len(methods)} methods",
+                        "severity": self.severity
                     })
-        return issues
-
+        return results
