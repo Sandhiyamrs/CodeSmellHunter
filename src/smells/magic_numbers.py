@@ -1,20 +1,21 @@
 import ast
+from .base import CodeSmell
 
+class MagicNumbers(CodeSmell):
+    name = "Magic Number"
+    severity = "LOW"
 
-class MagicNumberDetector:
-    def __init__(self, config):
-        self.ignore = config["IGNORE_MAGIC_NUMBERS"]
-
-    def detect(self, tree, file_path):
-        issues = []
+    def detect(self, tree, filename):
+        results = []
         for node in ast.walk(tree):
             if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
-                if node.value not in self.ignore:
-                    issues.append({
-                        "type": "Magic Number",
-                        "file": file_path,
-                        "value": node.value,
+                if node.value not in (0, 1):
+                    results.append({
+                        "file": filename,
+                        "smell": self.name,
                         "line": node.lineno,
+                        "message": f"Magic number {node.value}",
+                        "severity": self.severity
                     })
-        return issues
+        return results
 
