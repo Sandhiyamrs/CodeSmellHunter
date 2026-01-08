@@ -1,1 +1,41 @@
 
+{
+  "issues": [
+    {
+      "file": "samples/bad_code.py",
+      "smell": "Long Method",
+      "line": 3,
+      "message": "Function 'process_data' has 58 lines",
+      "severity": "HIGH"
+    },
+    {
+      "file": "samples/bad_code.py",
+      "smell": "Too Many Parameters",
+      "line": 3,
+      "message": "7 parameters",
+      "severity": "MEDIUM"
+    },
+    {
+      "file": "samples/bad_code.py",
+      "smell": "Magic Number",
+      "line": 20,
+      "message": "Magic number 42",
+      "severity": "LOW"
+    },
+    {
+      "file": "samples/bad_code.py",
+      "smell": "Large Class",
+      "line": 40,
+      "message": "Class 'DataProcessor' has 14 methods",
+      "severity": "HIGH"
+    }
+  ],
+  "metrics": {
+    "samples/bad_code.py": {
+      "loc": 132,
+      "functions": 9,
+      "classes": 1,
+      "cyclomatic_complexity": 18
+    }
+  }
+}
