@@ -1,25 +1,28 @@
 import ast
+from .base import CodeSmell
 
+class DeepNesting(CodeSmell):
+    name = "Deep Nesting"
+    severity = "MEDIUM"
 
-class DeepNestingDetector(ast.NodeVisitor):
-    def __init__(self, config):
-        self.max_depth = config["MAX_NESTING_DEPTH"]
-        self.issues = []
-        self.file_path = None
+    def __init__(self, max_depth=4):
+        self.max_depth = max_depth
 
-    def detect(self, tree, file_path):
-        self.file_path = file_path
-        self.visit(tree)
-        return self.issues
+    def detect(self, tree, filename):
+        results = []
 
-    def generic_visit(self, node, depth=0):
-        if depth > self.max_depth:
-            self.issues.append({
-                "type": "Deep Nesting",
-                "file": self.file_path,
-                "line": getattr(node, "lineno", None),
-                "depth": depth,
-            })
-        for child in ast.iter_child_nodes(node):
-            self.generic_visit(child, depth + 1)
+        def visit(node, depth=0):
+            if depth > self.max_depth:
+                results.append({
+                    "file": filename,
+                    "smell": self.name,
+                    "line": node.lineno,
+                    "message": f"Nesting depth {depth}",
+                    "severity": self.severity
+                })
+            for child in ast.iter_child_nodes(node):
+                visit(child, depth + 1)
+
+        visit(tree)
+        return results
 
